@@ -1,12 +1,25 @@
 var path = require('path')
 const express = require('express')
 const mockAPIResponse = require('./mockAPI.js')
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express()
 
 app.use(express.static('dist'))
 
 console.log(__dirname)
+
+function buildURL(text) {
+    const apiKey = process.env.API_KEY;
+    const baseURL = `https://api.meaningcloud.com/sentiment-2.1?key=${apiKey}`;
+    const userInput = `&of=json&txt=${text}`;
+    const language = 'lang=en';
+    return baseURL + userInput + language;
+}
+
+var textApiUrl = buildURL(text);
 
 app.get('/', function (req, res) {
     // res.sendFile('dist/index.html')
