@@ -3,6 +3,7 @@ const express = require('express');
 const fetch = require("node-fetch");
 const cors = require('cors');
 const dotenv = require('dotenv');
+var FormData = require('form-data');
 const mockAPIResponse = require('./mockAPI.js');
 
 
@@ -17,15 +18,6 @@ app.use(cors())
 
 console.log(__dirname)
 
-function buildURL(text) {
-    const apiKey = process.env.API_KEY;
-    const baseURL = `https://api.meaningcloud.com/sentiment-2.1?key=${apiKey}`;
-    const userInput = `&of=json&txt=${text}`;
-    const language = '&lang=en';
-    return baseURL + userInput + language;
-};
-
-
 app.get('/', function (req, res) {
     res.sendFile('dist/index.html')
     // res.sendFile(path.resolve('src/client/views/index.html'))
@@ -36,62 +28,55 @@ app.listen(8081, function () {
     console.log('Example app listening on port 8081!')
 })
 
+// function buildURL(text) {
+//     const apiKey = process.env.API_KEY;
+//     const baseURL = `https://api.meaningcloud.com/sentiment-2.1?key=${apiKey}`;
+//     const userInput = `&of=json&txt=${text}`;
+//     const language = '&lang=en';
+//     return baseURL + userInput + language;
+// };
 
-let text = "At this week's Full Council Annual General Meeting (Tuesday, 18 May), a new Ealing Council leadership and cabinet was announced. Councillor Peter Mason was elected as Leader of Ealing Council, and one of the first things he did was to announce his new cabinet:"
-let textApiUrl = buildURL(text);
+// ------- Build Text Classification URL ---------
 
-const sentiment = fetch(textApiUrl)
-.then(response => response.json())
-.then(function(meaning) {
-    return meaning;
-});
+const inputUrl = "https://www.udacity.com/course/front-end-web-developer-nanodegree--nd0011"
 
-const sendData = async (result) => {
-    sentiment.then((data) => {
-        result.send(data);
-        })
-    };
+const textClassificationUrl = "https://api.meaningcloud.com/class-2.0"
 
-app.get('/test', function (req, res) {
-    sendData(res);
-});
+const formdata = new FormData();
+formdata.append("key", process.env.API_KEY);
+formdata.append("url", inputUrl);
+formdata.append("model", "IPTC_en");
 
-// const sentiment = fetch(textApiUrl)
-//     .then(response => response.json())
-//     .then(function(meaning) {
-//         return meaning;
-//     });
+const requestOptions = {
+    method: 'POST',
+    body: formdata,
+    redirect: 'follow'
+}
 
-// const sendData = async (url, response) => {
-//     const data = await sentiment;
-//     response.send(data);
-// }
-// app.get('/test', function (req, res) {
-//     console.log(`Your API key is ${process.env.API_KEY}`);
-//     let text = "At this week's Full Council Annual General Meeting (Tuesday, 18 May), a new Ealing Council leadership and cabinet was announced. Councillor Peter Mason was elected as Leader of Ealing Council, and one of the first things he did was to announce his new cabinet:"
-//     let textApiUrl = buildURL(text);
-//     console.log(textApiUrl);
+// const classified = fetch(textClassificationUrl, requestOptions)
+//     .then(response => {
+//         return response.json()
+//     })
+//     .catch(error => console.log('error', error));
 
-//     const sentiment = fetch(textApiUrl)
-//         .then(response => response.json())
-//         .then(function(meaning) {
-//             return meaning;
-//     });
 
-//     const sendData = async (result) => {
-//         let textApiUrl = buildURL(text);
-//         sentiment.then((data) => {
-//             result.send(data);
+
+// const sendData = async (result) => {
+//     classified.then((data) => {
+//         result.send(data);
 //         })
 //     };
-//     // fetch(textApiUrl)
-//     // .then(response => response.json())
-//     // .then(function(meaning) {
-//     //     console.log(meaning);
-//     //     // res.send(meaning);
-//     //     res.json("Some dummy text");
-//     // })
-//     // res.send(mockAPIResponse)
+
     
+// app.get('/test', function (req, res) {
 //     sendData(res);
-// })
+//     // sendData(res);
+
+// });
+
+app.post('/test', function (req, res) {
+    // res.send('POST received');
+    console.log(req.body);
+
+});
+
