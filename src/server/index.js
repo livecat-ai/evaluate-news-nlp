@@ -1,11 +1,11 @@
 var path = require('path');
 const express = require('express');
-const fetch = require("node-fetch");
+
 const cors = require('cors');
 const dotenv = require('dotenv');
 var FormData = require('form-data');
 const mockAPIResponse = require('./mockAPI.js');
-
+const bodyParser = require('body-parser');
 
 dotenv.config();
 // console.log(`Your API key is ${process.env.API_KEY}`);
@@ -15,6 +15,13 @@ const app = express()
 app.use(express.static('dist'))
 
 app.use(cors())
+
+app.use(bodyParser.json())
+// to use url encoded values
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+const fetch = require("node-fetch");
 
 console.log(__dirname)
 
@@ -38,20 +45,21 @@ app.listen(8081, function () {
 
 // ------- Build Text Classification URL ---------
 
-const inputUrl = "https://www.udacity.com/course/front-end-web-developer-nanodegree--nd0011"
+// var inputUrl = "https://www.udacity.com/course/front-end-web-developer-nanodegree--nd0011"
 
-const textClassificationUrl = "https://api.meaningcloud.com/class-2.0"
+var inputUrl = "";
+// const textClassificationUrl = "https://api.meaningcloud.com/class-2.0"
 
-const formdata = new FormData();
-formdata.append("key", process.env.API_KEY);
-formdata.append("url", inputUrl);
-formdata.append("model", "IPTC_en");
+// const formdata = new FormData();
+// formdata.append("key", process.env.API_KEY);
+// formdata.append("url", inputUrl);
+// formdata.append("model", "IPTC_en");
 
-const requestOptions = {
-    method: 'POST',
-    body: formdata,
-    redirect: 'follow'
-}
+// const requestOptions = {
+//     method: 'POST',
+//     body: formdata,
+//     redirect: 'follow'
+// }
 
 // const classified = fetch(textClassificationUrl, requestOptions)
 //     .then(response => {
@@ -60,23 +68,39 @@ const requestOptions = {
 //     .catch(error => console.log('error', error));
 
 
+const sendData = async (result, sentiment) => {
+    sentiment.then((data) => {
+        result.send(data);
+        })
+    };
+  
 
-// const sendData = async (result) => {
-//     classified.then((data) => {
-//         result.send(data);
-//         })
-//     };
+app.get('/sentiment', function (req, res) {
+    // const textClassificationUrl = "https://api.meaningcloud.com/class-2.0"
 
-    
-// app.get('/test', function (req, res) {
-//     sendData(res);
-//     // sendData(res);
+    // const formdata = new FormData();
+    // formdata.append("key", process.env.API_KEY);
+    // formdata.append("url", inputUrl);
+    // formdata.append("model", "IPTC_en");
 
-// });
+    // const requestOptions = {
+    //     method: 'POST',
+    //     body: formdata,
+    //     redirect: 'follow'
+    // }
 
-app.post('/test', function (req, res) {
+    // const sentiment = fetch(textClassificationUrl, requestOptions)
+    //     .then(response => {
+    //         return response.json()
+    //     })
+    //     .catch(error => console.log('error', error));
+    // sendData(res, sentiment);
+    res.send({body: "test response"});
+});
+
+app.post('/input', function (req, res) {
     // res.send('POST received');
-    console.log(req.body);
-
+    console.log(req.body.url);
+    inputUrl = req.body.url;
 });
 
