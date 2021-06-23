@@ -1,4 +1,4 @@
-import { checkForName } from './js/nameChecker'
+import { checkUrl } from './js/urlChecker'
 import { handleSubmit } from './js/formHandler'
 import { onBlur } from './js/onBlur'
  
@@ -14,7 +14,7 @@ import './styles/header.scss';
 console.log(":::In index.js:::");
 
 export {
-    checkForName,
+    checkUrl,
     handleSubmit,
     onBlur
 }
