@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>Test</title>
+        <link rel="icon" href="data:,">
         <!-- <link rel="stylesheet" href="/styles/resets.css">
         <link rel="stylesheet" href="/styles/base.css">
         <link rel="stylesheet" href="/styles/header.css">
@@ -40,18 +41,18 @@
             <p>This is a footer</p>
         </footer>
 
+        <script>
+            // **************************************************
+            // Uncomment the code below to enable Service Workers
+            // **************************************************
+            
+            // Check that service workers are supported
+            if ('serviceWorker' in navigator) {
+                // Use the window load event to keep the page load performant
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js');
+                });
+            }
+        </script>
     </body>
-    <script>
-        // **************************************************
-        // Uncomment the code below to enable Service Workers
-        // **************************************************
-        
-        // Check that service workers are supported
-        if ('serviceWorker' in navigator) {
-            // Use the window load event to keep the page load performant
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js');
-            });
-        }
-    </script>
 </html>
