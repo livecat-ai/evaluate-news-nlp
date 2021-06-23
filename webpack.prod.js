@@ -3,6 +3,11 @@ const webpack = require('webpack')
 const HtmlWebPackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 
+// **************************************************
+// Uncomment the code below to enable Service Workers
+// **************************************************
+const WorkboxPlugin = require('workbox-webpack-plugin');
+
 module.exports = {
     entry: './src/client/index.js',
     mode: 'production',
@@ -30,5 +35,6 @@ module.exports = {
             filename: "./index.html",
         }),
         new MiniCssExtractPlugin( { filename: "[name].css" }),
+        new WorkboxPlugin.GenerateSW()
     ]
 }
